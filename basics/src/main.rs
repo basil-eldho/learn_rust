@@ -5,7 +5,7 @@ use std::io;
 fn main() {
     println!("Guess the number!");
 
-    let secret_number = rand::rng().random_range(1..=100);
+    let secret_number = rand::rng().random_range(1.0..=100.0);
 
     loop {
         println!("Please input your guess.");
@@ -16,18 +16,23 @@ fn main() {
             .read_line(&mut guess)
             .expect("Failed to read line");
 
-
-        let guess: u32 = match guess.trim().parse() {
+        let guess: f64 = match guess.trim().parse() {
             Ok(num) => num,
-            Err(_) => continue,
+            Err(err) => {
+                println!("{}", err);
+                continue;
+            }
         };
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => {
+        match guess.partial_cmp(&secret_number) {
+            Some(Ordering::Less) => println!("Too small!"),
+            Some(Ordering::Greater) => println!("Too big!"),
+            Some(Ordering::Equal) => {
                 println!("You win!");
                 break;
+            }
+            None => {
+                println!("Comparison failed!!");
             }
         }
     }
