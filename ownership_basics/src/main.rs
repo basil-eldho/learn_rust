@@ -33,7 +33,7 @@ fn main() {
     println!("area of rect1: {:#?}", rect1.area());
     
     // check if the given rectangle fits or not
-    println!("The given rectangle fits inside: {}",rect1.fit(&Rectangle::new(10, 10)));
+    println!("Can hold given rectangle?: {}",rect1.fit(&Rectangle::new(10, 10)));
 
     let s1 = String::from("hel lo");
 
