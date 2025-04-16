@@ -48,12 +48,12 @@ fn main() {
 fn word(str: &String) -> &str {
     let s = str.as_bytes();
     let iter = s.iter().index_with();
-    // for (i, &item) in iter {
-    //     println!("{i}  {item}");
-    //     if item == b' ' {
-    //         return &str[0..i];
-    //     }
-    // }
+    for (i, &item) in iter {
+        println!("{i}  {item}");
+        if item == b' ' {
+            return &str[0..i];
+        }
+    }
     &str[..]
 }
 
