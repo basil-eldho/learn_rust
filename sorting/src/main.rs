@@ -1,17 +1,27 @@
 use rand::Rng;
-use std::time::SystemTime;
+use std::env::args;
 
 fn main() {
+    let mut sort_alg = String::new();
+    for arg in args() {
+        sort_alg = arg
+    }
+
     let mut rng = rand::rng();
-    let mut numbers: Vec<i32> = (0..=50).map(|_| rng.random_range(0..1000)).collect(); // bubble sort
-    let now = SystemTime::now();
-    bubble_sort(&mut numbers);
-    println!("Elapsed time: {:?}", now.elapsed());
+    let mut numbers: Vec<i32> = (0..10).map(|_| rng.random_range(0..100)).collect();
+    println!("{:?}", numbers);
+
+    match sort_alg.as_str() {
+        "bubble-sort" => bubble_sort(&mut numbers),
+        "selection-sort" => selection_sort(&mut numbers),
+        "insertion-sort" => insertion_sort(&mut numbers),
+        _ => selection_sort(&mut numbers),
+    }
     println!("{:?}", numbers);
 }
 
 fn bubble_sort<T: PartialOrd>(arr: &mut [T]) {
-    for i in 0..arr.len().saturating_sub(1) {
+    for i in 0..arr.len() - 1 {
         let mut swapped = false;
         for j in 0..arr.len() - i - 1 {
             if arr[j] > arr[j + 1] {
@@ -26,9 +36,9 @@ fn bubble_sort<T: PartialOrd>(arr: &mut [T]) {
 }
 
 fn selection_sort<T: PartialOrd>(arr: &mut [T]) {
-    for i in 0..arr.len() {
+    for i in 0..arr.len() - 1 {
         let mut min = i;
-        for j in (i + 1)..arr.len() {
+        for j in i + 1..arr.len() {
             if arr[j] < arr[min] {
                 min = j;
             }
@@ -39,29 +49,18 @@ fn selection_sort<T: PartialOrd>(arr: &mut [T]) {
     }
 }
 
-fn quick_sort(arr: &mut [i32]) {
-    let len = arr.len();
-    if len <= 1 {
-        return;
-    }
-
-    let pivot_index = partition(arr);
-    quick_sort(&mut arr[..pivot_index]); // left partition
-    quick_sort(&mut arr[pivot_index + 1..]); // right partition
-}
-
-fn partition(arr: &mut [i32]) -> usize {
-    let len = arr.len();
-    let pivot = arr[len - 1]; // last element as pivot
-    let mut i = 0;
-
-    for j in 0..len - 1 {
-        if arr[j] <= pivot {
-            arr.swap(i, j);
-            i += 1;
+fn insertion_sort<T: PartialOrd>(arr: &mut [T]) {
+    for i in 1..arr.len() {
+        let mut j = i;
+        while j > 0 && arr[j] < arr[j - 1] {
+            arr.swap(j, j - 1);
+            j -= 1;
         }
-    }
 
-    arr.swap(i, len - 1); // put pivot in correct position
-    i
+        // for j in (1..=i) {
+        //     if arr[j] < arr[j-1] {
+        //         arr.swap(j, j-1);
+        //     }
+        // }
+    }
 }
